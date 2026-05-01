@@ -88,6 +88,30 @@ export const User = {
   },
 };
 
+export const OtpStore = {
+  async findByEmail(email: string) {
+    const result = await db.query("SELECT * FROM OtpStore WHERE email = ?", [
+      email,
+    ]);
+    return result[0] || null;
+  },
+
+  async upsert(email: string, data: any) {
+    // Delete existing if any
+    await db.query("DELETE FROM OtpStore WHERE email = ?", [email]);
+    // Insert new
+    const result = await db.query(
+      "INSERT INTO OtpStore (email, otp, expiresAt, createdAt, requestId) VALUES (?, ?, ?, ?, ?)",
+      [email, data.otp, data.expiresAt, data.createdAt, data.requestId],
+    );
+    return result;
+  },
+
+  async delete(email: string) {
+    await db.query("DELETE FROM OtpStore WHERE email = ?", [email]);
+  },
+};
+
 export const Mahasiswa = {
   async findByUserId(userId: string) {
     const result = await db.query("SELECT * FROM Mahasiswa WHERE userId = ?", [

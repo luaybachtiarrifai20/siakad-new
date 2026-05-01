@@ -41,7 +41,7 @@ router.post("/request-otp", async (req, res) => {
     const otp = generateOTP();
 
     // Store OTP (returns requestId for tracking)
-    const requestId = setOtp(email, otp);
+    const requestId = await setOtp(email, otp);
     console.log(`OTP request ${requestId} created for ${email}`);
 
     // Send OTP via email
@@ -80,7 +80,7 @@ router.post("/verify-otp", async (req, res) => {
     console.log(
       `[DEBUG] Attempting to verify OTP for ${email} with code: ${otp}`,
     );
-    const storedOtp = getOtp(email);
+    const storedOtp = await getOtp(email);
     if (!storedOtp) {
       console.log(`[DEBUG] OTP not found or expired for ${email}`);
       return res.status(401).json({ error: "OTP tidak valid atau kadaluarsa" });
@@ -101,7 +101,7 @@ router.post("/verify-otp", async (req, res) => {
     );
 
     // Delete OTP after verification
-    deleteOtp(email);
+    await deleteOtp(email);
     console.log(`[DEBUG] OTP deleted for ${email}`);
 
     // Find user in database
