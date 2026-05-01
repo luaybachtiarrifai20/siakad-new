@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpen, Plus, Trash2, CheckCircle, Clock, AlertCircle, Search } from 'lucide-react';
+import { Plus, Trash2, CheckCircle, Clock, AlertCircle, Search } from 'lucide-react';
 
 interface MataKuliah {
   id: string;

@@ -52,7 +52,6 @@ const presensiData: MKPresensi[] = [
 ];
 
 function persenHadir(records: PresensiRecord[], total: number) {
-  const hadir = records.filter(r => r.status === 'hadir' || r.status === 'sakit').length;
   const attended = records.filter(r => r.status === 'hadir').length;
   return { persen: Math.round((attended / Math.max(records.length, 1)) * 100), ekivalen: Math.round((attended / total) * 100) };
 }
@@ -126,7 +125,7 @@ export default function PresensiPage() {
 
         {/* Stat Pills */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {(Object.keys(counts) as Array<keyof typeof counts>).map(s => {
+          {(Object.keys(counts) as Array<keyof typeof statusConfig>).map(s => {
             const cfg = statusConfig[s];
             return (
               <div key={s} className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border ${cfg.color}`}>

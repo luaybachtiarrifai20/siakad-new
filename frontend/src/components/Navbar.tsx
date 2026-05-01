@@ -1,4 +1,4 @@
-import { Bell, Search, Menu, User } from 'lucide-react';
+import { Bell, Search, Menu } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
