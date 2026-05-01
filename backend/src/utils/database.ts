@@ -1,5 +1,5 @@
-import mysql from 'mysql2/promise';
-import dotenv from 'dotenv';
+import mysql from "mysql2/promise";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -12,11 +12,11 @@ interface DatabaseConfig {
 }
 
 const config: DatabaseConfig = {
-  host: 'libraayra.my.id',
-  port: 3306,
-  user: 'vsagtmfw_user',
-  password: 'libra2008',
-  database: 'vsagtmfw_siakad'
+  host: process.env.DB_HOST || "libraayra.my.id",
+  port: parseInt(process.env.DB_PORT || "3306"),
+  user: process.env.DB_USER || "vsagtmfw_user",
+  password: process.env.DB_PASSWORD || "libra2008",
+  database: process.env.DB_NAME || "vsagtmfw_siakad",
 };
 
 class Database {
@@ -28,7 +28,7 @@ class Database {
       ...config,
       waitForConnections: true,
       connectionLimit: 10,
-      queueLimit: 0
+      queueLimit: 0,
     });
   }
 
@@ -44,7 +44,7 @@ class Database {
       const [rows] = await this.pool.execute(sql, params);
       return rows;
     } catch (error) {
-      console.error('Database query error:', error);
+      console.error("Database query error:", error);
       throw error;
     }
   }
@@ -63,65 +63,61 @@ export const db = Database.getInstance();
 // Helper functions untuk operasi umum
 export const User = {
   async findByEmail(email: string) {
-    const result = await db.query(
-      'SELECT * FROM User WHERE email = ?',
-      [email]
-    );
+    const result = await db.query("SELECT * FROM User WHERE email = ?", [
+      email,
+    ]);
     return result[0] || null;
   },
 
   async create(data: any) {
     const result = await db.query(
-      'INSERT INTO User (id, email, password, role, createdAt, updatedAt) VALUES (?, ?, ?, ?, NOW(), NOW())',
-      [data.id, data.email, data.password, data.role]
+      "INSERT INTO User (id, email, password, role, createdAt, updatedAt) VALUES (?, ?, ?, ?, NOW(), NOW())",
+      [data.id, data.email, data.password, data.role],
     );
     return result;
   },
 
   async update(id: string, data: any) {
-    const fields = Object.keys(data).map(key => `${key} = ?`).join(', ');
+    const fields = Object.keys(data)
+      .map((key) => `${key} = ?`)
+      .join(", ");
     const values = Object.values(data);
     values.push(id);
-    
-    await db.query(
-      `UPDATE User SET ${fields} WHERE id = ?`,
-      values
-    );
-  }
+
+    await db.query(`UPDATE User SET ${fields} WHERE id = ?`, values);
+  },
 };
 
 export const Mahasiswa = {
   async findByUserId(userId: string) {
-    const result = await db.query(
-      'SELECT * FROM Mahasiswa WHERE userId = ?',
-      [userId]
-    );
+    const result = await db.query("SELECT * FROM Mahasiswa WHERE userId = ?", [
+      userId,
+    ]);
     return result[0] || null;
   },
 
   async create(data: any) {
     const result = await db.query(
-      'INSERT INTO Mahasiswa (id, userId, nim, nama, prodiId, createdAt, updatedAt) VALUES (?, ?, ?, ?, NOW(), NOW())',
-      [data.id, data.userId, data.nim, data.nama, data.prodiId]
+      "INSERT INTO Mahasiswa (id, userId, nim, nama, prodiId, createdAt, updatedAt) VALUES (?, ?, ?, ?, NOW(), NOW())",
+      [data.id, data.userId, data.nim, data.nama, data.prodiId],
     );
     return result;
-  }
+  },
 };
 
 export const Dosen = {
   async findByUserId(userId: string) {
-    const result = await db.query(
-      'SELECT * FROM Dosen WHERE userId = ?',
-      [userId]
-    );
+    const result = await db.query("SELECT * FROM Dosen WHERE userId = ?", [
+      userId,
+    ]);
     return result[0] || null;
   },
 
   async create(data: any) {
     const result = await db.query(
-      'INSERT INTO Dosen (id, userId, nidn, nama, createdAt, updatedAt) VALUES (?, ?, ?, NOW(), NOW())',
-      [data.id, data.userId, data.nidn, data.nama]
+      "INSERT INTO Dosen (id, userId, nidn, nama, createdAt, updatedAt) VALUES (?, ?, ?, NOW(), NOW())",
+      [data.id, data.userId, data.nidn, data.nama],
     );
     return result;
-  }
+  },
 };
