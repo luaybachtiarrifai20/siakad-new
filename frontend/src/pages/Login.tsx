@@ -22,7 +22,8 @@ export default function Login() {
     setLoading(true);
     try {
       const normalizedEmail = email.toLowerCase().trim();
-      await axios.post('http://localhost:8000/auth/request-otp', { email: normalizedEmail, password });
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      await axios.post(`${apiUrl}/auth/request-otp`, { email: normalizedEmail, password });
       setStep('verify');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Gagal mengirim OTP');
@@ -37,7 +38,8 @@ export default function Login() {
     setLoading(true);
     try {
       const normalizedEmail = email.toLowerCase().trim();
-      const res = await axios.post('http://localhost:8000/auth/verify-otp', { email: normalizedEmail, otp });
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const res = await axios.post(`${apiUrl}/auth/verify-otp`, { email: normalizedEmail, otp });
       localStorage.setItem('siakad_token', res.data.customToken);
       localStorage.setItem('siakad_role', res.data.role);
 
