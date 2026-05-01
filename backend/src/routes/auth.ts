@@ -19,7 +19,14 @@ router.post("/request-otp", async (req, res) => {
     }
 
     // Find user in database
-    const user = await User.findByEmail(email);
+    let user;
+    try {
+      user = await User.findByEmail(email);
+    } catch (dbError: any) {
+      console.error("Database error during findByEmail:", dbError);
+      return res.status(500).json({ error: `Database error: ${dbError.message}` });
+    }
+
     if (!user) {
       return res.status(401).json({ error: "User tidak ditemukan" });
     }
@@ -41,9 +48,9 @@ router.post("/request-otp", async (req, res) => {
     try {
       await sendOTP(email, otp);
       console.log(`OTP berhasil dikirim ke ${email}`);
-    } catch (emailError) {
-      console.error("Gagal mengirim OTP:", emailError);
-      return res.status(500).json({ error: "Gagal mengirim OTP" });
+    } catch (emailError: any) {
+      console.error("Gagal mengirim OTP via SMTP:", emailError);
+      return res.status(500).json({ error: `Email error: ${emailError.message}` });
     }
 
     res.json({
@@ -53,8 +60,8 @@ router.post("/request-otp", async (req, res) => {
       otp: process.env.NODE_ENV === "development" ? otp : undefined,
     });
   } catch (error: any) {
-    console.error("Request OTP error:", error.message);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Request OTP error:", error);
+    res.status(500).json({ error: error.message || "Internal server error" });
   }
 });
 
@@ -158,8 +165,8 @@ router.post("/verify-otp", async (req, res) => {
       return res.status(500).json({ error: "Firebase authentication failed" });
     }
   } catch (error: any) {
-    console.error("Verify OTP error:", error.message);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Verify OTP error:", error);
+    res.status(500).json({ error: error.message || "Internal server error" });
   }
 });
 
