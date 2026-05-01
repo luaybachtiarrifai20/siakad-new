@@ -21,7 +21,8 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      await axios.post('http://localhost:8000/auth/request-otp', { email, password });
+      const normalizedEmail = email.toLowerCase().trim();
+      await axios.post('http://localhost:8000/auth/request-otp', { email: normalizedEmail, password });
       setStep('verify');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Gagal mengirim OTP');
@@ -35,7 +36,8 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:8000/auth/verify-otp', { email, otp });
+      const normalizedEmail = email.toLowerCase().trim();
+      const res = await axios.post('http://localhost:8000/auth/verify-otp', { email: normalizedEmail, otp });
       localStorage.setItem('siakad_token', res.data.customToken);
       localStorage.setItem('siakad_role', res.data.role);
 
