@@ -1,7 +1,10 @@
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  service: "gmail", // or host: process.env.SMTP_HOST
+  service: "gmail",
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -20,24 +23,12 @@ export const sendOTP = async (
     html: `<h3>Kode OTP Anda adalah: <b>${otpCode}</b></h3><p>Masukkan kode ini untuk menyelesaikan proses verifikasi. Kode ini bersifat rahasia.</p>`,
   };
 
-  console.log(
-    `\n=================================\n🔑 MOCK OTP: ${otpCode} (untuk ${email})\n=================================\n`,
-  );
-
-  if (
-    !process.env.SMTP_USER ||
-    process.env.SMTP_USER === "email.kampus@gmail.com"
-  ) {
-    return;
-  }
-
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`OTP sent to ${email}`);
+    console.log(`OTP berhasil dikirim ke ${email}`);
   } catch (err) {
-    console.log(
-      "Bypassing SMTP error to allow MOCK OTP verification di terminal.",
-    );
+    console.error("Gagal mengirim OTP:", err);
+    throw err;
   }
 };
 

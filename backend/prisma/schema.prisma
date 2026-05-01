@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -27,70 +26,70 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  mahasiswa   Mahasiswa?
-  dosen       Dosen?
+  mahasiswa Mahasiswa?
+  dosen     Dosen?
 }
 
 model Mahasiswa {
-  id        String   @id @default(uuid())
-  nim       String   @unique
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  prodiId   String
-  prodi     Prodi    @relation(fields: [prodiId], references: [id])
-  krs       Krs[]
-  tagihan   TagihanUKT[]
+  id      String       @id @default(uuid())
+  nim     String       @unique
+  userId  String       @unique
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prodiId String
+  prodi   Prodi        @relation(fields: [prodiId], references: [id])
+  krs     Krs[]
+  tagihan TagihanUKT[]
 }
 
 model Dosen {
-  id        String   @id @default(uuid())
-  nidn      String   @unique
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  mengajar  Kelas[]
+  id       String  @id @default(uuid())
+  nidn     String  @unique
+  userId   String  @unique
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mengajar Kelas[]
 }
 
 model Prodi {
-  id          String      @id @default(uuid())
-  nama        String
-  fakultasId  String
-  fakultas    Fakultas    @relation(fields: [fakultasId], references: [id])
-  mahasiswa   Mahasiswa[]
-  mataKuliah  MataKuliah[]
+  id         String       @id @default(uuid())
+  nama       String
+  fakultasId String
+  fakultas   Fakultas     @relation(fields: [fakultasId], references: [id])
+  mahasiswa  Mahasiswa[]
+  mataKuliah MataKuliah[]
 }
 
 model Fakultas {
-  id          String      @id @default(uuid())
-  nama        String
-  prodi       Prodi[]
+  id    String  @id @default(uuid())
+  nama  String
+  prodi Prodi[]
 }
 
 model MataKuliah {
-  id          String      @id @default(uuid())
-  kode        String      @unique
-  nama        String
-  sks         Int
-  prodiId     String
-  prodi       Prodi       @relation(fields: [prodiId], references: [id])
-  kelas       Kelas[]
+  id      String  @id @default(uuid())
+  kode    String  @unique
+  nama    String
+  sks     Int
+  prodiId String
+  prodi   Prodi   @relation(fields: [prodiId], references: [id])
+  kelas   Kelas[]
 }
 
 model Kelas {
-  id           String      @id @default(uuid())
+  id           String     @id @default(uuid())
   nama         String
   mataKuliahId String
-  mataKuliah   MataKuliah  @relation(fields: [mataKuliahId], references: [id])
+  mataKuliah   MataKuliah @relation(fields: [mataKuliahId], references: [id])
   dosenId      String
-  dosen        Dosen       @relation(fields: [dosenId], references: [id])
+  dosen        Dosen      @relation(fields: [dosenId], references: [id])
   krs          Krs[]
   jadwal       Jadwal[]
   presensi     Presensi[]
 }
 
 model Jadwal {
-  id         String   @id @default(uuid())
+  id         String @id @default(uuid())
   kelasId    String
-  kelas      Kelas    @relation(fields: [kelasId], references: [id])
+  kelas      Kelas  @relation(fields: [kelasId], references: [id])
   hari       String
   jamMulai   String
   jamSelesai String
@@ -98,14 +97,14 @@ model Jadwal {
 }
 
 model Krs {
-  id          String      @id @default(uuid())
+  id          String    @id @default(uuid())
   mahasiswaId String
-  mahasiswa   Mahasiswa   @relation(fields: [mahasiswaId], references: [id])
+  mahasiswa   Mahasiswa @relation(fields: [mahasiswaId], references: [id])
   kelasId     String
-  kelas       Kelas       @relation(fields: [kelasId], references: [id])
+  kelas       Kelas     @relation(fields: [kelasId], references: [id])
   nilai       Float?
   grade       String?
-  semester    String      // Cth: "Ganjil 2026/2027"
+  semester    String // Cth: "Ganjil 2026/2027"
 }
 
 model Presensi {
@@ -114,7 +113,7 @@ model Presensi {
   kelas       Kelas    @relation(fields: [kelasId], references: [id])
   pertemuanKe Int
   tanggal     DateTime
-  dataHadir   Json     // Disimpan sbg JSON yg berisi `{ nim: status }`
+  dataHadir   Json // Disimpan sbg JSON yg berisi `{ nim: status }`
 }
 
 enum StatusPembayaran {
@@ -130,14 +129,14 @@ model TagihanUKT {
   semester    String
   jumlah      Float
   status      StatusPembayaran @default(PENDING)
-  pembayaran  Pembayaran[]     
+  pembayaran  Pembayaran[]
 }
 
 model Pembayaran {
-  id          String       @id @default(uuid())
+  id          String     @id @default(uuid())
   tagihanId   String
-  tagihan     TagihanUKT   @relation(fields: [tagihanId], references: [id])
+  tagihan     TagihanUKT @relation(fields: [tagihanId], references: [id])
   jumlahBayar Float
-  tanggal     DateTime     @default(now())
-  metode      String       
+  tanggal     DateTime   @default(now())
+  metode      String
 }
