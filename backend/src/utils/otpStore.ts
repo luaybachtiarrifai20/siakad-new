@@ -1,7 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
 
-const STORE_FILE = path.join(process.cwd(), ".otp_store.json");
+const STORE_FILE = process.env.VERCEL
+  ? path.join("/tmp", ".otp_store.json")
+  : path.join(process.cwd(), ".otp_store.json");
 
 interface OtpEntry {
   otp: string;
