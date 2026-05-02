@@ -40,11 +40,14 @@ export default function Login() {
       const normalizedEmail = email.toLowerCase().trim();
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
       const res = await axios.post(`${apiUrl}/auth/verify-otp`, { email: normalizedEmail, otp });
-      localStorage.setItem('siakad_token', res.data.customToken);
       localStorage.setItem('siakad_role', res.data.role);
-
+      
       if (res.data.customToken !== 'mock_custom_token_bypass') {
-        await signInWithCustomToken(auth, res.data.customToken);
+        const userCredential = await signInWithCustomToken(auth, res.data.customToken);
+        const idToken = await userCredential.user.getIdToken();
+        localStorage.setItem('siakad_token', idToken);
+      } else {
+        localStorage.setItem('siakad_token', res.data.customToken);
       }
 
       navigate('/dashboard');

@@ -3,6 +3,7 @@ import Login from './pages/Login';
 import DashboardLayout from './components/DashboardLayout';
 import DashboardHome from './pages/DashboardHome';
 import ComingSoon from './pages/ComingSoon';
+import UserManagement from './pages/UserManagement';
 import KRSPage from './pages/KRSPage';
 import NilaiPage from './pages/NilaiPage';
 import JadwalPage from './pages/JadwalPage';
@@ -19,7 +20,7 @@ function App() {
         {/* Protected Dashboard (layout wraps all sub-routes) */}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardHome />} />
-          <Route path="users" element={<ComingSoon />} />
+          <Route path="users" element={<UserManagement />} />
           <Route path="mahasiswa" element={<ComingSoon />} />
           <Route path="dosen" element={<ComingSoon />} />
           <Route path="matkul" element={<ComingSoon />} />

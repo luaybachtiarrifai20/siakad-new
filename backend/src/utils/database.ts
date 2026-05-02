@@ -86,6 +86,14 @@ export const User = {
 
     await db.query(`UPDATE User SET ${fields} WHERE id = ?`, values);
   },
+
+  async findAll() {
+    return await db.query("SELECT id, email, role, createdAt, updatedAt FROM User ORDER BY createdAt DESC");
+  },
+
+  async delete(id: string) {
+    await db.query("DELETE FROM User WHERE id = ?", [id]);
+  },
 };
 
 export const OtpStore = {
