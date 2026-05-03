@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { 
-  Users, Plus, Search, MoreVertical, Edit2, Trash2, 
-  UserCheck, UserX, Mail, Shield, ShieldCheck, 
+  Users, Plus, Search, Edit2, Trash2, 
+  UserCheck, Mail, Shield, ShieldCheck, 
   Loader2, AlertCircle, CheckCircle, X
 } from 'lucide-react';
 import axios from 'axios';
